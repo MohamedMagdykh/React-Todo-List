@@ -3,18 +3,24 @@ import { TodoListHeader } from './TodoListHeader'
 import { Todo } from './Todo'
 
 export const TodoList = () => {
-  const [Todos , AddTodo] = useState([])
+  const [Todos , setTodo] = useState([])
+    const [filterTodos , setFilterTodos] = useState(Todos)
+     const [checkFilter , setCheckFilter] = useState(false)
   const [updateTodo , setEditTodo] = useState({})
   const addNewTodo = (newTodo ) => {
-     AddTodo([...Todos , newTodo])
+    const updatedTodos = [...Todos, newTodo];
+     setTodo(updatedTodos)
+     handelFilterTodo(updatedTodos , checkFilter)
   }
   const  handelAction = (id,todoAction)=>{
     if(todoAction ==='compelet'){
-       AddTodo(Todos.map(  t => t.id === id ? {...t , done:!t.done }: t))
+       setTodo(Todos.map(  t => t.id === id ? {...t , done:!t.done }: t))
+       handelFilterTodo(Todos.map(  t => t.id === id ? {...t , done:!t.done }: t) , checkFilter)
     }
     if(todoAction ==='trash'){
 
-      AddTodo(Todos.filter(  t => t.id !== id))
+      setTodo(Todos.filter(  t => t.id !== id))
+      handelFilterTodo(Todos.filter(  t => t.id !== id) , checkFilter)
     }
   
      if(todoAction ==='edit'){
@@ -26,18 +32,28 @@ export const TodoList = () => {
     }
   }
     const updatedTodo = (updatedTodo ) => {
-      setEditTodo({})
-     AddTodo(Todos.map(  t => t.id === updatedTodo.id ? updatedTodo : t))
+     setEditTodo({})
+     setTodo(Todos.map(  t => t.id === updatedTodo.id ? updatedTodo : t))
+     handelFilterTodo(Todos.map(  t => t.id === updatedTodo.id ? updatedTodo : t) , checkFilter)
+  }
+  const handelFilterTodo = (updatedTodos , flagFilter) => {
+        setCheckFilter(flagFilter)
+      if(flagFilter) {
+       setFilterTodos(updatedTodos.filter(  t => t.done === true) )
+      }
+      else{
+        setFilterTodos(updatedTodos)
+      }
   }
   return (
     <div className='todolist'>
         <header><h1>Todo List ( {Todos.length} )</h1></header>
         <div className='container'>
-           <TodoListHeader newTodo={addNewTodo} editTodo={updateTodo} editedTodo={updatedTodo}  />
+           <TodoListHeader newTodo={addNewTodo} editTodo={updateTodo} editedTodo={updatedTodo} filterTodo={(fil)=> handelFilterTodo(Todos ,fil)}  />
          
           <div className="todos-list" >
-              {Todos.length ? (<div> 
-                {Todos.map((todo)=>(
+              {filterTodos.length ? (<div> 
+                {filterTodos.map((todo)=>(
                      <Todo todoData={todo} todoActions={handelAction} key={todo?.id} />
                 ))}
 
