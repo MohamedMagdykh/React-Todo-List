@@ -8,7 +8,7 @@ export const TodoList = () => {
      const [checkFilter , setCheckFilter] = useState(false)
   const [updateTodo , setEditTodo] = useState({})
   const addNewTodo = (newTodo ) => {
-    const updatedTodos = [...Todos, newTodo];
+    const updatedTodos = [newTodo , ...Todos ];
      setTodo(updatedTodos)
      handelFilterTodo(updatedTodos , checkFilter)
   }
@@ -39,7 +39,7 @@ export const TodoList = () => {
   const handelFilterTodo = (updatedTodos , flagFilter) => {
         setCheckFilter(flagFilter)
       if(flagFilter) {
-       setFilterTodos(updatedTodos.filter(  t => t.done === true) )
+       setFilterTodos(updatedTodos.filter(  t => t.done === false) )
       }
       else{
         setFilterTodos(updatedTodos)
