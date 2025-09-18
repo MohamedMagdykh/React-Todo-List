@@ -3,10 +3,12 @@ import { TodoListHeader } from './TodoListHeader'
 import { Todo } from './Todo'
 
 export const TodoList = () => {
-  const [Todos , setTodo] = useState([])
-    const [filterTodos , setFilterTodos] = useState(Todos)
-     const [checkFilter , setCheckFilter] = useState(false)
+  const TodoLocalStorage = localStorage.getItem('todosData') ? JSON.parse(localStorage.getItem('todosData')) : []
+  const [Todos , setTodo] = useState(TodoLocalStorage)
+  const [filterTodos , setFilterTodos] = useState(Todos)
+  const [checkFilter , setCheckFilter] = useState(false)
   const [updateTodo , setEditTodo] = useState({})
+  const setLocal = () =>{localStorage.setItem('todosData' , JSON.stringify(Todos))}
   const addNewTodo = (newTodo ) => {
     const updatedTodos = [newTodo , ...Todos ];
      setTodo(updatedTodos)
@@ -45,6 +47,7 @@ export const TodoList = () => {
         setFilterTodos(updatedTodos)
       }
   }
+  setLocal()
   return (
     <div className='todolist'>
         <header><h1>Todo List ( {Todos.length} )</h1></header>
